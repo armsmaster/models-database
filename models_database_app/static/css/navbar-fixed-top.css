@@ -1,0 +1,12 @@
+body {
+  padding-top: 70px;
+}
+#table-model-attributes tr td:nth-child(1){
+    width:20%;
+}
+#table-model-attributes tr td:nth-child(2){
+    width:70%;
+}
+#table-attribute-history tr td:nth-child(2){
+    width:70%;
+}

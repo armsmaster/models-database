@@ -1,0 +1,92 @@
+{% load staticfiles %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/navbar-fixed-top.css' %}">
+    <!--<script src="../../assets/js/ie-emulation-modes-warning.js"></script>-->
+	<script type="text/javascript">
+		<!--
+		function toggle_visibility(id) {
+		   var e = document.getElementById(id);
+		   if(e.style.display == 'block')
+			  e.style.display = 'none';
+		   else
+			  e.style.display = 'block';
+		}
+		function toggle_visibility_table(id) {
+		   var e = document.getElementById(id);
+		   if(e.style.display == '')
+			  e.style.display = 'none';
+		   else
+			  e.style.display = '';
+		}
+		//-->
+	</script>
+</head>
+<body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/app/models/">Uralsib Models Database</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Models <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/app/models/">All</a></li>
+                <li><a href="/app/models/new/">New</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Owners <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/app/owners/">All</a></li>
+                <li><a href="/app/owners/new/">New</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Attributes <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/app/attributes/">All</a></li>
+                <li><a href="/app/attributes/new/">New</a></li>
+              </ul>
+            </li>
+            <li><a href="#about">About</a></li>
+          </ul>
+          {% if user.is_authenticated %}
+          <p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link">{{ user.username }}</a></p>
+          {% else %}
+          <p class="navbar-text navbar-right">Not signed in</p>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+    
+    
+	<div class="container">
+		{% block content %}
+		{% endblock %}
+	</div>
+    
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <!--<script src="../../dist/js/bootstrap.min.js"></script>-->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!--<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>-->
+</body>

@@ -1,0 +1,57 @@
+{% extends 'models_database_app/base.html' %}
+{% block content %}
+
+<div class="row">
+  <div class="col-md-4">
+    <table class="table table-bordered table-condensed">
+        <tbody>
+            <tr>
+                <th>Model</th>
+                <td><a href="{{ model_attribute.model.get_absolute_url }}">{{ model_attribute.model }}</a></td>
+            </tr>
+            <tr>
+                <th>Attribute</th>
+                <td>{{ model_attribute.attribute }}</td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+</div>
+
+{% for rec in model_attribute.records.all %}
+<div class="row">
+  <div class="col-md-8">
+    <table class="table table-bordered table-condensed" id="table-attribute-history">
+        <tbody>
+            {% if rec.record_id = model_attribute.valid_record_id%}<tr class="success">{% else %}<tr class="danger">{% endif %}
+                <th>Record Version #</th>
+                <td>{{ rec.record_id }}</td>
+            </tr>
+            <tr>
+                <th>User</th>
+                <td>{{ rec.user.username }}</td>
+            </tr>
+            <tr>
+                <th>Timestamp</th>
+                <td>{{ rec.timestamp|date:"d.m.Y H:i" }}</td>
+            </tr>
+            <tr>
+                <th>Change Type</th>
+                <td>{{ rec.change_type }}</td>
+            </tr>
+            <tr>
+                <th>Value</th>
+                {% if rec.string_value %}<td>{{ rec.string_value }}</td>{% endif %}
+                {% if rec.text_value %}<td>{{ rec.text_value }}</td>{% endif %}
+                {% if rec.markdown_value_html %}<td>{{ rec.markdown_value_html|safe }}</td>{% endif %}
+                {% if rec.date_value %}<td>{{ rec.date_value|date:"d.m.Y" }}</td>{% endif %}
+                {% if rec.number_value %}<td>{{ rec.number_value }}</td>{% endif %}
+                {% if rec.file_value %}<td><a href="/app/assets/{{ rec.file_value }}" target="_blank">{{ rec.file_value }}</a></td>{% endif %}
+            </tr>
+        </tbody>
+    </table>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

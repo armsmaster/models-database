@@ -1,0 +1,49 @@
+{% extends 'models_database_app/base.html' %}
+{% block content %}
+<h1>Models Owner Details</h1>
+<div class="row">
+    <div class="col-md-8">
+        <p>
+            <a href="/app/owners/edit/{{ owner.id }}/" class="btn btn-default" role="button">Edit</a>
+        </p>
+    </div>
+</div>
+<div class="row">
+  <div class="col-md-8">
+    <table class="table table-bordered table-condensed">
+        <tbody>
+            <tr>
+                <td>Name</td>
+                <td>{{ owner.name }}</td>
+            </tr>
+            <tr>
+                <td>Department</td>
+                <td>{{ owner.department }}</td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+</div>
+
+{% if owner.models.all %}
+<h2>Owner's Models</h2>
+<div class="row">
+  <div class="col-md-4">
+    <table class="table table-bordered table-condensed">
+        <thead class="thead-inverse">
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for model in owner.models.all %}
+            <tr>
+                <td><a href="{{ model.get_absolute_url }}">{{ model.name }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

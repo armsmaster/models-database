@@ -1,0 +1,64 @@
+{% extends 'models_database_app/base.html' %}
+{% block content %}
+<h3>Model Attributes</h3>
+<div class="row">
+    <div class="col-md-8">
+        <p>
+            <a href="/app/models/{{ model.id }}/new-attribute/" class="btn btn-default" role="button">Add Attribute</a>
+        </p>
+    </div>
+</div>
+<div class="row">
+    <table class="table table-bordered table-condensed" id="table-model-attributes">
+        <tbody>
+            <tr>
+                <td>Owner</td>
+                <td><a href="{{ model.owner.get_absolute_url }}">{{ model.owner }}</a></td>
+                <td><a href="/app/models/edit/{{ model.id }}/" class="btn btn-default btn-xs" role="button">Edit</a></td>
+            </tr>
+            {% for a in model.attributes.all %}
+            <tr>
+                <td>{{ a.attribute.name }}</td>
+                {% with rec=a.current_record %}
+                {% if rec %}
+                    {% if rec.string_value %}<td>{{ rec.string_value }}</td>{% endif %}
+                    {% if rec.text_value %}<td>{{ rec.text_value }}</td>{% endif %}
+                    {% if rec.markdown_value_html %}<td>{{ rec.markdown_value_html|safe }}</td>{% endif %}
+                    {% if rec.date_value %}<td>{{ rec.date_value|date:"d.m.Y" }}</td>{% endif %}
+                    {% if rec.number_value %}<td>{{ rec.number_value }}</td>{% endif %}
+                    {% if rec.file_value %}<td><a href="/app/assets/{{ rec.file_value }}" target="_blank">{{ rec.file_value }}</a></td>{% endif %}
+                {% else %}
+                    <td>#null</td>
+                {% endif %}
+                {% endwith %}
+                <td>
+                    <a href="/app/models/update-attribute/{{ a.id }}/" class="btn btn-default btn-xs" role="button">Edit</a>
+                    <a href="/app/model-attribute/{{ a.id }}/" class="btn btn-default btn-xs" role="button">History</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<h3>Versions</h3>
+<div class="row">
+    <div class="col-md-8">
+        <p>
+            <a href="/app/models/{{ model.id }}/new-version/" class="btn btn-default" role="button">Add Version</a>
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table table-bordered table-condensed" id="table-model-attributes">
+            <tbody>
+                {% for version in model.versions.all %}
+                {% if version.is_most_recent %}<tr class="success">{% else %}<tr>{% endif %}
+                    <td><a href="/app/model-versions/{{ version.id }}/">{{ version.model }} v{{ version.number}}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

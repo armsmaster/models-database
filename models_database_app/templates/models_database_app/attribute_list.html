@@ -1,0 +1,28 @@
+{% extends 'models_database_app/base.html' %}
+{% block content %}
+<h1>Attributes</h1>
+<div class="row">
+  <div class="col-md-8">
+    <table class="table table-bordered table-condensed">
+        <thead class="thead-inverse">
+            <tr>
+                <th>Order</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Data Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attrib in attributes %}
+            <tr>
+                <td>{{ attrib.sort_order }}</td>
+                <td><a href="{{ attrib.get_absolute_url }}">{{ attrib.name }}</a></td>
+                <td>{{ attrib.description }}</td>
+                <td>{{ attrib.data_type }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

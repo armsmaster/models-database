@@ -1,0 +1,24 @@
+{% extends 'models_database_app/base.html' %}
+{% block content %}
+<h1>All Models</h1>
+<div class="row">
+  <div class="col-md-6">
+    <table class="table table-bordered table-condensed">
+        <thead class="thead-inverse">
+            <tr>
+                <th>Name</th>
+                <th>Owner</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for model in models %}
+            <tr>
+                <td><a href="{{ model.get_absolute_url }}">{{ model.name }}</a></td>
+                <td>{{ model.owner }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

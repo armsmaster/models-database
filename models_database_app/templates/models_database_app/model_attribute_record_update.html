@@ -1,0 +1,27 @@
+{% extends 'models_database_app/base.html' %}
+{% block content %}
+<h3>Edit Attribute</h3>
+<div class="row">
+    <div class="col-md-8">
+        <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <table class="table table-defalut">
+                <tr>
+                    <th>Model:</th>
+                    <td>{{ model_attribute.model.name }}</td>
+                </tr>
+                <tr>
+                    <th>Attribute:</th>
+                    <td>{{ model_attribute.attribute.name }}</td>
+                </tr>
+                <tr>
+                    <th>Description:</th>
+                    <td>{{ model_attribute.attribute.description }}</td>
+                </tr>
+                {{ form.as_table }}
+            </table>
+            <input class="btn btn-default" type="submit" value="Submit" />
+        </form>
+  </div>
+</div>
+{% endblock %}
