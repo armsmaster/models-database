@@ -23,7 +23,7 @@
   <div class="col-md-8">
     <table class="table table-bordered table-condensed" id="table-attribute-history">
         <tbody>
-            {% if rec.record_id = model_attribute.valid_record_id%}<tr class="success">{% else %}<tr class="danger">{% endif %}
+            {% if rec.record_id == model_attribute.valid_record_id%}<tr class="success">{% else %}<tr class="danger">{% endif %}
                 <th>Record Version #</th>
                 <td>{{ rec.record_id }}</td>
             </tr>
