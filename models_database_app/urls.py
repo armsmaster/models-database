@@ -9,6 +9,10 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^login/$', django.contrib.auth.views.login),
+    url(r'^risk-types/$', login_required(views.RiskTypeList.as_view())),
+    url(r'^risk-types/new/$', login_required(views.RiskTypeCreate.as_view())),
+    url(r'^risk-types/edit/(?P<pk>[0-9]+)/$', login_required(views.RiskTypeUpdate.as_view())),
+    url(r'^risk-types/(?P<pk>[0-9]+)/$', login_required(views.RiskTypeView.as_view())),
     url(r'^owners/$', login_required(views.OwnerList.as_view())),
     url(r'^owners/new/$', login_required(views.OwnerCreate.as_view())),
     url(r'^owners/edit/(?P<pk>[0-9]+)/$', login_required(views.OwnerUpdate.as_view())),

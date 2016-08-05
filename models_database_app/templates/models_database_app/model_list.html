@@ -1,20 +1,23 @@
 {% extends 'models_database_app/base.html' %}
 {% block content %}
-<h1>All Models</h1>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-10">
     <table class="table table-bordered table-condensed">
         <thead class="thead-inverse">
             <tr>
-                <th>Name</th>
+                <th>Model Name</th>
+                <th>Risk Type</th>
                 <th>Owner</th>
+                <th>Department</th>
             </tr>
         </thead>
         <tbody>
             {% for model in models %}
             <tr>
                 <td><a href="{{ model.get_absolute_url }}">{{ model.name }}</a></td>
-                <td>{{ model.owner }}</td>
+                <td><a href="{{ model.risk_type.get_absolute_url }}">{{ model.risk_type }}</a></td>
+                <td><a href="{{ model.owner.get_absolute_url }}">{{ model.owner }}</a></td>
+                <td>{{ model.owner.department }}</td>
             </tr>
             {% endfor %}
         </tbody>

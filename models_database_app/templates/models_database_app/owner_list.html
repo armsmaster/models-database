@@ -1,13 +1,13 @@
 {% extends 'models_database_app/base.html' %}
 {% block content %}
-<h1>Model Owners</h1>
 <div class="row">
   <div class="col-md-8">
     <table class="table table-bordered table-condensed">
         <thead class="thead-inverse">
             <tr>
-                <th>Name</th>
+                <th>Models Owner Name</th>
                 <th>Department</th>
+                <th>Number of Models</th>
             </tr>
         </thead>
         <tbody>
@@ -15,6 +15,7 @@
             <tr>
                 <td><a href="{{ owner.get_absolute_url }}">{{ owner.name }}</a></td>
                 <td>{{ owner.department }}</td>
+                <td>{{ owner.models.count }}</td>
             </tr>
             {% endfor %}
         </tbody>

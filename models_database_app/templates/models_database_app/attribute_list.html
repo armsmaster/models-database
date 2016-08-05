@@ -1,24 +1,25 @@
 {% extends 'models_database_app/base.html' %}
 {% block content %}
-<h1>Attributes</h1>
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-12">
     <table class="table table-bordered table-condensed">
         <thead class="thead-inverse">
             <tr>
+                <th>Attribute Name</th>
                 <th>Order</th>
-                <th>Name</th>
                 <th>Description</th>
                 <th>Data Type</th>
+                <th>Allow Multiple</th>
             </tr>
         </thead>
         <tbody>
             {% for attrib in attributes %}
             <tr>
-                <td>{{ attrib.sort_order }}</td>
                 <td><a href="{{ attrib.get_absolute_url }}">{{ attrib.name }}</a></td>
+                <td>{{ attrib.sort_order }}</td>
                 <td>{{ attrib.description }}</td>
                 <td>{{ attrib.data_type }}</td>
+                <td>{% if attrib.allow_multiple %}Yes{% else %}No{% endif %}</td>
             </tr>
             {% endfor %}
         </tbody>

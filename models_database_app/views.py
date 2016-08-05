@@ -16,10 +16,31 @@ def index(request):
     template = loader.get_template('models_database_app/index.html')
     context = {
     }
-    return HttpResponse(template.render(context, request))
+    return HttpResponseRedirect('/app/risk-types/')
         
-# OWNER
+# RISK TYPE
 
+class RiskTypeList(ListView):
+    model = models.RiskType
+    context_object_name = 'risk_types'
+    template_name = 'models_database_app/risk_type_list.html'
+        
+class RiskTypeView(DetailView):
+    template_name = 'models_database_app/risk_type_details.html'
+    model = models.RiskType
+    context_object_name = 'risk_type'
+
+class RiskTypeCreate(CreateView):
+    model = models.RiskType
+    fields = ['name']
+    template_name = 'models_database_app/risk_type_new.html'
+
+class RiskTypeUpdate(UpdateView):
+    model = models.RiskType
+    fields = ['name']
+    template_name = 'models_database_app/risk_type_edit.html'
+    
+# OWNER
 
 class OwnerList(ListView):
     model = models.Owner
@@ -58,12 +79,12 @@ class AttributeView(DetailView):
     
 class AttributeCreate(CreateView):
     model = models.Attribute
-    fields = ['name', 'data_type', 'description', 'sort_order']
+    fields = ['name', 'data_type', 'description', 'sort_order', 'allow_multiple']
     template_name = 'models_database_app/attribute_new.html'
 
 class AttributeUpdate(UpdateView):
     model = models.Attribute
-    fields = ['name', 'description', 'sort_order']
+    fields = ['name', 'description', 'sort_order', 'allow_multiple']
     template_name = 'models_database_app/attribute_edit.html'
     
 # MODEL
@@ -98,7 +119,7 @@ class ModelCreate(CreateView):
 
 class ModelUpdate(UpdateView):
     model = models.Model
-    fields = ['owner']
+    fields = [ 'risk_type', 'owner']
     template_name = 'models_database_app/model_edit.html'
     context_object_name = 'model'
     
@@ -117,8 +138,11 @@ class ModelAttributeCreate(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.model = models.Model.objects.get(pk=self.kwargs['pk'])
-        if not self.object.model.attributes.filter(attribute=self.object.attribute):
+        if self.object.attribute.allow_multiple:
             self.object.save()
+        else:
+            if not self.object.model.attributes.filter(attribute=self.object.attribute):
+                self.object.save()
         return HttpResponseRedirect('/app/models/{}/'.format(self.object.model.id))
         
 def ModelAttributeRecordCreate(request, model_attribute_id):
@@ -206,8 +230,11 @@ class VersionAttributeCreate(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.version = models.Version.objects.get(pk=self.kwargs['pk'])
-        if not self.object.version.attributes.filter(attribute=self.object.attribute):
+        if self.object.attribute.allow_multiple:
             self.object.save()
+        else:
+            if not self.object.version.attributes.filter(attribute=self.object.attribute):
+                self.object.save()
         return HttpResponseRedirect('/app/model-versions/{}/'.format(self.object.version.id))
         
 

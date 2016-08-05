@@ -1,0 +1,21 @@
+{% extends 'models_database_app/base.html' %}
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <th>Risk Type</th>
+            <th>Number of Models</th>
+        </thead>
+        <tbody>
+            {% for risk_type in risk_types %}
+            <tr>
+                <td><a href="{{ risk_type.get_absolute_url }}">{{ risk_type.name }}</a></td>
+                <td>{{ risk_type.models.count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

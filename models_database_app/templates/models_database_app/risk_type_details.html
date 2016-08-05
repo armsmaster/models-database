@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-md-8">
         <p>
-            <a href="/app/owners/edit/{{ owner.id }}/" class="btn btn-default btn-xs" role="button">Edit</a>
+            <a href="/app/risk-types/edit/{{ risk_type.id }}/" class="btn btn-default btn-xs" role="button">Edit</a>
         </p>
     </div>
 </div>
@@ -12,31 +12,31 @@
     <table class="table table-bordered table-condensed">
         <tbody>
             <tr>
-                <th>Models Owner</th>
-                <td>{{ owner.name }}</td>
-            </tr>
-            <tr>
-                <th>Department</th>
-                <td>{{ owner.department }}</td>
+                <th>Risk Type</th>
+                <td>{{ risk_type.name }}</td>
             </tr>
         </tbody>
     </table>
   </div>
 </div>
 
-{% if owner.models.all %}
+{% if risk_type.models.all %}
 <div class="row">
-  <div class="col-md-4">
+  <div class="col-md-8">
     <table class="table table-bordered table-condensed">
         <thead class="thead-inverse">
             <tr>
                 <th>Model Name</th>
+                <th>Owner</th>
+                <th>Department</th>
             </tr>
         </thead>
         <tbody>
-            {% for model in owner.models.all %}
+            {% for model in risk_type.models.all %}
             <tr>
                 <td><a href="{{ model.get_absolute_url }}">{{ model.name }}</a></td>
+                <td><a href="{{ model.owner.get_absolute_url }}">{{ model.owner.name }}</a></td>
+                <td>{{ model.owner.department }}</td>
             </tr>
             {% endfor %}
         </tbody>

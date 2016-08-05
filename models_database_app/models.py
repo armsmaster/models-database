@@ -13,9 +13,19 @@ class Owner(models.Model):
     
     def __str__(self):
         return self.name
+
+class RiskType(models.Model):
+    name = models.CharField(max_length=200)
     
+    def get_absolute_url(self):
+        return '/app/risk-types/{}/'.format(self.id)
+    
+    def __str__(self):
+        return self.name
+        
 class Model(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name='models')
+    risk_type = models.ForeignKey(RiskType, on_delete=models.CASCADE, related_name='models', null=True, blank=True)
     
     def get_absolute_url(self):
         return '/app/models/{}/'.format(self.id)
@@ -67,6 +77,10 @@ class Attribute(models.Model):
     description = models.CharField(max_length=500, blank=True)
     data_type = models.CharField(max_length=50, choices=TYPE_CHOICES, default=text_type)
     sort_order = models.IntegerField(default=-1)
+    allow_multiple = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['sort_order']
     
     def get_absolute_url(self):
         return '/app/attributes/{}/'.format(self.id)
@@ -172,7 +186,7 @@ class VersionAttributeRecord(models.Model):
     )
     
     def upload_path(instance, filename):
-        return 'files/models/{}/{}/{}/'.format(instance.version_attribute.version.id, instance.version_attribute.attribute.id, instance.record_id)
+        return 'files/versions/{}/{}/{}/{}'.format(instance.version_attribute.version.id, instance.version_attribute.attribute.id, instance.record_id, filename)
     
     version_attribute = models.ForeignKey(VersionAttribute, on_delete=models.CASCADE, related_name='records')
     

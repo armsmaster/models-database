@@ -1,10 +1,9 @@
 {% extends 'models_database_app/base.html' %}
 {% block content %}
-<h1>Attribute Details</h1>
 <div class="row">
     <div class="col-md-8">
         <p>
-            <a href="/app/attributes/edit/{{ attribute.id }}/" class="btn btn-default" role="button">Edit</a>
+            <a href="/app/attributes/edit/{{ attribute.id }}/" class="btn btn-default btn-xs" role="button">Edit</a>
         </p>
     </div>
 </div>
@@ -12,21 +11,25 @@
   <div class="col-md-8">
     <table class="table table-bordered table-condensed">
         <tbody>
-            <tr>
-                <td>Name</td>
+            <tr class="success">
+                <th>Attribute Name</th>
                 <td>{{ attribute.name }}</td>
             </tr>
             <tr>
-                <td>Data Type</td>
+                <th>Data Type</th>
                 <td>{{ attribute.data_type }}</td>
             </tr>
             <tr>
-                <td>Description</td>
+                <th>Description</th>
                 <td>{{ attribute.description }}</td>
             </tr>
             <tr>
-                <td>Sort Order</td>
+                <th>Sort Order</th>
                 <td>{{ attribute.sort_order }}</td>
+            </tr>
+            <tr>
+                <th>Allow Multiple Records</th>
+                <td>{% if attribute.allow_multiple %}Yes{% else %}No{% endif %}</td>
             </tr>
         </tbody>
     </table>

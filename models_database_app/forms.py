@@ -18,7 +18,7 @@ class Model(forms.ModelForm):
     
     class Meta:
         model = models.Model
-        fields = ('owner',)
+        fields = ('risk_type', 'owner',)
         
 class ModelEditOwner(forms.ModelForm):
     
