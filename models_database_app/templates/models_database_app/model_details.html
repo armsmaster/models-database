@@ -26,12 +26,13 @@
                     <th>{{ a.attribute.name }}</th>
                     {% with rec=a.current_record %}
                     {% if rec %}
-                        {% if rec.string_value %}<td>{{ rec.string_value }}</td>{% endif %}
-                        {% if rec.text_value %}<td>{{ rec.text_value }}</td>{% endif %}
-                        {% if rec.markdown_value_html %}<td>{{ rec.markdown_value_html|safe }}</td>{% endif %}
-                        {% if rec.date_value %}<td>{{ rec.date_value|date:"d.m.Y" }}</td>{% endif %}
-                        {% if rec.number_value %}<td>{{ rec.number_value }}</td>{% endif %}
+                        {% if rec.string_value %}<td>{{ rec }}</td>{% endif %}
+                        {% if rec.text_value %}<td>{{ rec }}</td>{% endif %}
+                        {% if rec.markdown_value_html %}<td>{{ rec|safe }}</td>{% endif %}
+                        {% if rec.date_value %}<td>{{ rec|date:"d.m.Y" }}</td>{% endif %}
+                        {% if rec.number_value %}<td>{{ rec }}</td>{% endif %}
                         {% if rec.file_value %}<td><a href="/app/assets/{{ rec.file_value }}" target="_blank">{{ rec.file_value }}</a></td>{% endif %}
+                        {% if rec.choices.all %}<td>{{ rec }}</td>{% endif %}
                     {% else %}
                         <td class="danger">Пожалуйста заполните это поле</td>
                     {% endif %}

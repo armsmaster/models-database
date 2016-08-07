@@ -42,6 +42,7 @@
                         {% if rec.date_value %}<td>{{ rec.date_value|date:"d.m.Y" }}</td>{% endif %}
                         {% if rec.number_value %}<td>{{ rec.number_value }}</td>{% endif %}
                         {% if rec.file_value %}<td><a href="/app/assets/{{ rec.file_value }}" target="_blank">{{ rec.file_value }}</a></td>{% endif %}
+                        {% if rec.choices.all %}<td>{{ rec }}</td>{% endif %}
                     {% else %}
                         <td class="danger">Пожалуйста заполните это поле</td>
                     {% endif %}

@@ -63,6 +63,7 @@ class Attribute(models.Model):
     markdown_type = 'MD'
     number_type = 'NUM'
     file_type = 'FILE'
+    multiple_choice_type = 'MULT_CHOICE'
     
     TYPE_CHOICES = (
         (string_type, 'Short String'),
@@ -71,6 +72,7 @@ class Attribute(models.Model):
         (text_type, 'Long Text'),
         (markdown_type, 'Markdown Text'),
         (file_type, 'File'),
+        (multiple_choice_type, 'Multiple Choice'),
     )
     
     name = models.CharField(max_length=200)
@@ -87,7 +89,15 @@ class Attribute(models.Model):
     
     def __str__(self):
         return self.name
+
+
+class AttributeChoice(models.Model):
+    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE, related_name='choices')
+    name = models.CharField(max_length=300)
     
+    def __str__(self):
+        return self.name
+        
 class ModelAttribute(models.Model):
     model = models.ForeignKey(Model, on_delete=models.CASCADE, related_name='attributes')
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
@@ -159,6 +169,25 @@ class ModelAttributeRecord(models.Model):
     class Meta:
         ordering = ['-record_id']
     
+    def __str__(self):
+        if self.model_attribute.attribute.data_type == Attribute.string_type:
+            return str(self.string_value)
+        if self.model_attribute.attribute.data_type == Attribute.text_type:
+            return str(self.text_value)
+        if self.model_attribute.attribute.data_type == Attribute.markdown_type:
+            return str(self.markdown_value_html)
+        if self.model_attribute.attribute.data_type == Attribute.date_type:
+            return str(self.date_value)
+        if self.model_attribute.attribute.data_type == Attribute.number_type:
+            return str(self.number_value)
+        if self.model_attribute.attribute.data_type == Attribute.file_type:
+            return str(self.file_value)
+        if self.model_attribute.attribute.data_type == Attribute.multiple_choice_type:
+            set = [c.attribute_choice.name for c in self.choices.all()]
+            return ', '.join(set)
+        else:
+            super(ModelAttributeRecord, self).str()
+    
     def save(self):
         if ModelAttributeRecord.objects.filter(model_attribute=self.model_attribute):
             self.record_id = self.model_attribute.valid_record_id + 1
@@ -172,6 +201,10 @@ class ModelAttributeRecord(models.Model):
             self.markdown_value_html = markdown(self.markdown_value)
         print(self.file_value)
         super(ModelAttributeRecord, self).save()
+        
+class ModelAttributeRecordChoice(models.Model):
+    model_attribute_record = models.ForeignKey(ModelAttributeRecord, on_delete=models.CASCADE, related_name='choices')
+    attribute_choice = models.ForeignKey(AttributeChoice, on_delete=models.CASCADE)
         
 class VersionAttributeRecord(models.Model):
     
@@ -209,6 +242,25 @@ class VersionAttributeRecord(models.Model):
     class Meta:
         ordering = ['-record_id']
     
+    def __str__(self):
+        if self.version_attribute.attribute.data_type == Attribute.string_type:
+            return str(self.string_value)
+        if self.version_attribute.attribute.data_type == Attribute.text_type:
+            return str(self.text_value)
+        if self.version_attribute.attribute.data_type == Attribute.markdown_type:
+            return str(self.markdown_value_html)
+        if self.version_attribute.attribute.data_type == Attribute.date_type:
+            return str(self.date_value)
+        if self.version_attribute.attribute.data_type == Attribute.number_type:
+            return str(self.number_value)
+        if self.version_attribute.attribute.data_type == Attribute.file_type:
+            return str(self.file_value)
+        if self.version_attribute.attribute.data_type == Attribute.multiple_choice_type:
+            set = [c.attribute_choice.name for c in self.choices.all()]
+            return ', '.join(set)
+        else:
+            super(VersionAttributeRecord, self).str()
+    
     def save(self):
         if VersionAttributeRecord.objects.filter(version_attribute=self.version_attribute):
             self.record_id = self.version_attribute.valid_record_id + 1
@@ -221,3 +273,7 @@ class VersionAttributeRecord(models.Model):
         if self.markdown_value:
             self.markdown_value_html = markdown(self.markdown_value)
         super(VersionAttributeRecord, self).save()
+        
+class VersionAttributeRecordChoice(models.Model):
+    version_attribute_record = models.ForeignKey(VersionAttributeRecord, on_delete=models.CASCADE, related_name='choices')
+    attribute_choice = models.ForeignKey(AttributeChoice, on_delete=models.CASCADE)

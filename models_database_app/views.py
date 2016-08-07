@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 
 from django.contrib.auth.decorators import login_required
 
@@ -72,10 +72,22 @@ class AttributeList(ListView):
     context_object_name = 'attributes'
     template_name = 'models_database_app/attribute_list.html'
     
-class AttributeView(DetailView):
+class AttributeView(DetailView, FormView):
     template_name = 'models_database_app/attribute_details.html'
     model = models.Attribute
     context_object_name = 'attribute'
+    form_class = forms.AttributeChoice
+    
+    def get_success_url(self):
+        object = self.get_object()
+        return '/app/attributes/{}/'.format(object.id)
+    
+    def form_valid(self, form):
+        choice = form.save(commit=False)
+        choice.attribute = self.get_object()
+        choice.save()
+        return super(AttributeView, self).form_valid(form)
+    
     
 class AttributeCreate(CreateView):
     model = models.Attribute
@@ -160,6 +172,25 @@ def ModelAttributeRecordCreate(request, model_attribute_id):
             form = forms.ModelAttributeRecordNumber(request.POST)
         elif object.attribute.data_type == models.Attribute.file_type:
             form = forms.ModelAttributeRecordFile(request.POST, request.FILES)
+        elif object.attribute.data_type == models.Attribute.multiple_choice_type:
+            form = forms.ModelAttributeRecordMultipleChoice(request.POST)
+            choice_set = [(item.id, item.name) for item in object.attribute.choices.all()]
+            form.fields['choices'].choices = choice_set
+            if form.is_valid():
+                rec = models.ModelAttributeRecord()
+                rec.model_attribute = object
+                rec.user = request.user
+                rec.save()
+                print(form.cleaned_data['choices'])
+                for choice in form.cleaned_data['choices']:
+                    c = models.AttributeChoice.objects.get(pk=int(choice))
+                    x = models.ModelAttributeRecordChoice()
+                    x.model_attribute_record = rec
+                    x.attribute_choice = c
+                    x.save()
+            else:
+                print(form.errors)
+            return HttpResponseRedirect('/app/models/{}/'.format(object.model.id))
         rec = form.save(commit=False)
         rec.model_attribute = object
         rec.user = request.user
@@ -177,6 +208,11 @@ def ModelAttributeRecordCreate(request, model_attribute_id):
         form = forms.ModelAttributeRecordNumber()
     elif object.attribute.data_type == models.Attribute.file_type:
         form = forms.ModelAttributeRecordFile()
+    elif object.attribute.data_type == models.Attribute.multiple_choice_type:
+        form = forms.ModelAttributeRecordMultipleChoice(request.POST)
+        choice_set = [(item.id, item.name) for item in object.attribute.choices.all()]
+        form.fields['choices'].choices = choice_set
+        form.fields['choices'].widget.attrs['size'] = str(len(choice_set))
     context = {
         'model_attribute': object, 
         'form': form,
@@ -253,6 +289,25 @@ def VersionAttributeRecordCreate(request, version_attribute_id):
             form = forms.VersionAttributeRecordNumber(request.POST)
         elif object.attribute.data_type == models.Attribute.file_type:
             form = forms.VersionAttributeRecordFile(request.POST, request.FILES)
+        elif object.attribute.data_type == models.Attribute.multiple_choice_type:
+            form = forms.VersionAttributeRecordMultipleChoice(request.POST)
+            choice_set = [(item.id, item.name) for item in object.attribute.choices.all()]
+            form.fields['choices'].choices = choice_set
+            if form.is_valid():
+                rec = models.VersionAttributeRecord()
+                rec.version_attribute = object
+                rec.user = request.user
+                rec.save()
+                print(form.cleaned_data['choices'])
+                for choice in form.cleaned_data['choices']:
+                    c = models.AttributeChoice.objects.get(pk=int(choice))
+                    x = models.VersionAttributeRecordChoice()
+                    x.version_attribute_record = rec
+                    x.attribute_choice = c
+                    x.save()
+            else:
+                print(form.errors)
+            return HttpResponseRedirect('/app/model-versions/{}/'.format(object.version.id))
         rec = form.save(commit=False)
         rec.version_attribute = object
         rec.user = request.user
@@ -270,6 +325,11 @@ def VersionAttributeRecordCreate(request, version_attribute_id):
         form = forms.VersionAttributeRecordNumber()
     elif object.attribute.data_type == models.Attribute.file_type:
         form = forms.VersionAttributeRecordFile()
+    elif object.attribute.data_type == models.Attribute.multiple_choice_type:
+        form = forms.VersionAttributeRecordMultipleChoice(request.POST)
+        choice_set = [(item.id, item.name) for item in object.attribute.choices.all()]
+        form.fields['choices'].choices = choice_set
+        form.fields['choices'].widget.attrs['size'] = str(len(choice_set))
     context = {
         'version_attribute': object, 
         'form': form,

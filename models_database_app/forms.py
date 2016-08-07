@@ -13,6 +13,11 @@ class Attribute(forms.ModelForm):
         model = models.Attribute
         fields = ('name', 'data_type', 'description', 'sort_order')
         
+class AttributeChoice(forms.ModelForm):
+    class Meta:
+        model = models.AttributeChoice
+        fields = ('name',)
+        
 class Model(forms.ModelForm):
     model_name = forms.CharField(max_length=200)
     
@@ -60,6 +65,12 @@ class ModelAttributeRecordFile(forms.ModelForm):
     class Meta:
         model = models.ModelAttributeRecord
         fields = ('file_value',)
+        
+class ModelAttributeRecordMultipleChoice(forms.Form):
+    choices = forms.MultipleChoiceField(choices=[], required=None, widget=forms.SelectMultiple(attrs={'size': '4'}))
+
+class VersionAttributeRecordMultipleChoice(forms.Form):
+    choices = forms.MultipleChoiceField(choices=[], required=None, widget=forms.SelectMultiple(attrs={'size': '4'}))
         
 class Version(forms.ModelForm):
     class Meta:
