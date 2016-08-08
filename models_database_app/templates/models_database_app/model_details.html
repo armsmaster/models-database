@@ -29,7 +29,7 @@
                         {% if rec.string_value %}<td>{{ rec }}</td>{% endif %}
                         {% if rec.text_value %}<td>{{ rec }}</td>{% endif %}
                         {% if rec.markdown_value_html %}<td>{{ rec|safe }}</td>{% endif %}
-                        {% if rec.date_value %}<td>{{ rec|date:"d.m.Y" }}</td>{% endif %}
+                        {% if rec.date_value %}<td>{{ rec.date_value|date:"d.m.Y" }}</td>{% endif %}
                         {% if rec.number_value %}<td>{{ rec }}</td>{% endif %}
                         {% if rec.file_value %}<td><a href="/app/assets/{{ rec.file_value }}" target="_blank">{{ rec.file_value }}</a></td>{% endif %}
                         {% if rec.choices.all %}<td>{{ rec }}</td>{% endif %}
