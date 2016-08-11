@@ -44,4 +44,63 @@
   </div>
 </div>
 {% endif %}
+
+<div class="row">
+    <div class="col-md-4">
+        <p>
+            <a href="#" class="btn btn-default btn-xs" role="button" onclick="toggle_visibility('required');">Show / Hide Required Attributes</a>
+        </p>
+        <div id="required" style="display: none;">
+            {% if risk_type.count_required_attributes_for_models %}
+            <table class="table table-bordered table-condensed">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Attributes Required for Models</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in risk_type.required.all %}
+                    {% if req.obj_type == "MODEL" %}
+                    <tr>
+                        <td>{{ req.attribute }}</td>
+                        <td><a href="/required-attribute-delete/{{ req.id }}/">delete</a></td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No required attributes for models</p>
+            {% endif %}
+            {% if risk_type.count_required_attributes_for_versions %}
+            <table class="table table-bordered table-condensed">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Attributes Required for Versions</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in risk_type.required.all %}
+                    {% if req.obj_type == "VERSION" %}
+                    <tr>
+                        <td>{{ req.attribute }}</td>
+                        <td><a href="/required-attribute-delete/{{ req.id }}/">delete</a></td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No required attributes for versions</p>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input class="btn btn-default btn-xs" type="submit" value="Add Required Attribute" />
+            </form>
+        </div>
+  </div>
+</div>
 {% endblock %}

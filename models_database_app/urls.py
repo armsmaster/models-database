@@ -34,4 +34,5 @@ urlpatterns = [
     url(r'^model-versions/update-attribute/(?P<version_attribute_id>[0-9]+)/$', login_required(views.VersionAttributeRecordCreate)),
     url(r'^version-attribute/(?P<pk>[0-9]+)/$', login_required(views.VersionAttributeView.as_view())),
     url(r'^model-versions/edit/(?P<pk>[0-9]+)/$', login_required(views.VersionUpdate.as_view())),
+    url(r'^required-attribute-delete/(?P<object_id>[0-9]+)/$', login_required(views.DeleteAttributeRequirement)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

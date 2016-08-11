@@ -23,9 +23,15 @@ class RiskType(models.Model):
     def __str__(self):
         return self.name
         
+    def count_required_attributes_for_models(self):
+        return self.required.filter(obj_type='MODEL').count()
+    
+    def count_required_attributes_for_versions(self):
+        return self.required.filter(obj_type='VERSION').count()
+        
 class Model(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name='models')
-    risk_type = models.ForeignKey(RiskType, on_delete=models.CASCADE, related_name='models', null=True, blank=True)
+    risk_type = models.ForeignKey(RiskType, on_delete=models.CASCADE, related_name='models')
     
     def get_absolute_url(self):
         return '/app/models/{}/'.format(self.id)
@@ -40,6 +46,16 @@ class Model(models.Model):
             
     def __str__(self):
         return self.name()
+        
+    def save(self):
+        super(Model, self).save()
+        risk_type = self.risk_type
+        for req in risk_type.required.all():
+            if req.obj_type == AttributeRequired.MOD:
+                model_attribute = ModelAttribute()
+                model_attribute.model = self
+                model_attribute.attribute = req.attribute
+                model_attribute.save()
 
 class Version(models.Model):
     model = models.ForeignKey(Model, on_delete=models.CASCADE, related_name='versions')
@@ -55,6 +71,16 @@ class Version(models.Model):
         if self.number == max([v.number for v in self.model.versions.all()]):
             return True
         return False
+        
+    def save(self):
+        super(Version, self).save()
+        risk_type = self.model.risk_type
+        for req in risk_type.required.all():
+            if req.obj_type == AttributeRequired.VER:
+                version_attribute = VersionAttribute()
+                version_attribute.version = self
+                version_attribute.attribute = req.attribute
+                version_attribute.save()
     
 class Attribute(models.Model):
     string_type = 'STR'
@@ -97,6 +123,22 @@ class AttributeChoice(models.Model):
     
     def __str__(self):
         return self.name
+
+
+class AttributeRequired(models.Model):
+    MOD = 'MODEL'
+    VER = 'VERSION'
+    OBJ_TYPES = (
+        (MOD, MOD),
+        (VER, VER)
+    )
+    risk_type = models.ForeignKey(RiskType, on_delete=models.CASCADE, related_name='required')
+    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE, related_name='required')
+    obj_type = models.CharField(max_length=300, choices=OBJ_TYPES)
+    
+    class Meta:
+        ordering = ['attribute__sort_order']
+    
         
 class ModelAttribute(models.Model):
     model = models.ForeignKey(Model, on_delete=models.CASCADE, related_name='attributes')

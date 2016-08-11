@@ -25,11 +25,31 @@ class RiskTypeList(ListView):
     context_object_name = 'risk_types'
     template_name = 'models_database_app/risk_type_list.html'
         
-class RiskTypeView(DetailView):
+class RiskTypeView(DetailView, FormView):
     template_name = 'models_database_app/risk_type_details.html'
     model = models.RiskType
     context_object_name = 'risk_type'
-
+    form_class = forms.AttributeRequired
+    
+    def get_success_url(self):
+        object = self.get_object()
+        return '/app/risk-types/{}/'.format(object.id)
+    
+    def post(self , request , *args , **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+    
+    def form_valid(self, form):
+        requirement = form.save(commit=False)
+        requirement.risk_type = self.get_object()
+        if not models.AttributeRequired.objects.filter(risk_type=requirement.risk_type, attribute=requirement.attribute, obj_type=requirement.obj_type):
+            requirement.save()
+        return super(RiskTypeView, self).form_valid(form)
+    
 class RiskTypeCreate(CreateView):
     model = models.RiskType
     fields = ['name']
@@ -39,6 +59,16 @@ class RiskTypeUpdate(UpdateView):
     model = models.RiskType
     fields = ['name']
     template_name = 'models_database_app/risk_type_edit.html'
+
+def DeleteAttributeRequirement(request, object_id):
+    if models.AttributeRequired.objects.filter(pk=object_id):
+        object = models.AttributeRequired.objects.get(pk=object_id)
+        risk_type = object.risk_type
+        object.delete()
+        return HttpResponseRedirect(risk_type.get_absolute_url())
+    return HttpResponseRedirect('/app/risk-types/')
+    
+    
     
 # OWNER
 
@@ -81,6 +111,14 @@ class AttributeView(DetailView, FormView):
     def get_success_url(self):
         object = self.get_object()
         return '/app/attributes/{}/'.format(object.id)
+    
+    def post(self , request , *args , **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
     
     def form_valid(self, form):
         choice = form.save(commit=False)

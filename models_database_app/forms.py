@@ -111,3 +111,8 @@ class VersionAttributeRecordFile(forms.ModelForm):
     class Meta:
         model = models.VersionAttributeRecord
         fields = ('file_value',)
+
+class AttributeRequired(forms.ModelForm):
+    class Meta:
+        model = models.AttributeRequired
+        fields = ('attribute', 'obj_type',)
